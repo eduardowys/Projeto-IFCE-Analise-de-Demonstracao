@@ -1,0 +1,14 @@
+Dim_ClassificaçãoGerencial =
+ADDCOLUMNS(
+    FILTER(
+        DISTINCT ( BASE_RECEBIMENTOS[CLASSIFICAÇÃO_GERENCIAL] ),
+        NOT ( ISBLANK ( BASE_RECEBIMENTOS[CLASSIFICAÇÃO_GERENCIAL] ) )
+    ),
+    "ID_Categoria",
+        RANKX(
+            DISTINCT ( BASE_RECEBIMENTOS[CLASSIFICAÇÃO_GERENCIAL] ),
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO_GERENCIAL],
+            ,
+            ASC
+        )
+)

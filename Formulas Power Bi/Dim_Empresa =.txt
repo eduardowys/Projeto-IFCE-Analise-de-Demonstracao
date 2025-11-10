@@ -1,0 +1,17 @@
+Dim_Empresa = 
+VAR EmpresasValidas =
+    FILTER(
+        DISTINCT( BASE_RECEBIMENTOS[EMPRESA] ),
+        NOT( ISBLANK( BASE_RECEBIMENTOS[EMPRESA] ) )
+    )
+RETURN
+ADDCOLUMNS(
+    EmpresasValidas,
+    "ID_Empresa",
+        RANKX(
+            EmpresasValidas,
+            BASE_RECEBIMENTOS[EMPRESA],
+            ,
+            ASC
+        )
+)
