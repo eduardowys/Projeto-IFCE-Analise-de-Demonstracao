@@ -1,30 +1,19 @@
-Dim_Empresa =
-ADDCOLUMNS(
-    FILTER(
-        DISTINCT ( BASE_RECEBIMENTOS[EMPRESA] ),
-        NOT ( ISBLANK ( BASE_RECEBIMENTOS[EMPRESA] ) )
-    ),
-    "ID_Empresa",
-        RANKX(
-            DISTINCT ( BASE_RECEBIMENTOS[EMPRESA] ),
-            BASE_RECEBIMENTOS[EMPRESA],
-            ,
-            ASC
-        )
-)
-
----------------------------------------------------------------------
-
-Dim_Data =
+Dim_Data = 
 VAR MinData =
     MINX(
-        FILTER(ALL(BASE_RECEBIMENTOS), NOT(ISBLANK(BASE_RECEBIMENTOS[DATA]))),
-        BASE_RECEBIMENTOS[DATA]
+        UNION(
+            SELECTCOLUMNS(FILTER(ALL(BASE_RECEBIMENTOS), NOT(ISBLANK(BASE_RECEBIMENTOS[DATA]))), "Data", BASE_RECEBIMENTOS[DATA]),
+            SELECTCOLUMNS(FILTER(ALL(BASE_PAGAMENTOS), NOT(ISBLANK(BASE_PAGAMENTOS[DATA]))), "Data", BASE_PAGAMENTOS[DATA])
+        ),
+        [Data]
     )
 VAR MaxData =
     MAXX(
-        FILTER(ALL(BASE_RECEBIMENTOS), NOT(ISBLANK(BASE_RECEBIMENTOS[DATA]))),
-        BASE_RECEBIMENTOS[DATA]
+        UNION(
+            SELECTCOLUMNS(FILTER(ALL(BASE_RECEBIMENTOS), NOT(ISBLANK(BASE_RECEBIMENTOS[DATA]))), "Data", BASE_RECEBIMENTOS[DATA]),
+            SELECTCOLUMNS(FILTER(ALL(BASE_PAGAMENTOS), NOT(ISBLANK(BASE_PAGAMENTOS[DATA]))), "Data", BASE_PAGAMENTOS[DATA])
+        ),
+        [Data]
     )
 RETURN
 ADDCOLUMNS(
@@ -33,13 +22,33 @@ ADDCOLUMNS(
     "Nome_Mes", FORMAT([Date], "MMMM"),
     "Dia", DAY([Date]),
     "AnoMes", FORMAT([Date], "yyyy-MM"),
-    "Trimestre",
-        FORMAT(ROUNDUP(MONTH([Date]) / 3, 0), "0") & "º Trimestre",
-    "Semestre",
-        IF(MONTH([Date]) <= 6, "1º Semestre", "2º Semestre")
+    "Trimestre", FORMAT(ROUNDUP(MONTH([Date]) / 3, 0), "0") & "º Trimestre",
+    "Semestre", IF(MONTH([Date]) <= 6, "1º Semestre", "2º Semestre")
 )
 
+
+---------------------------------------------------------------------
+
+Dim_Empresa = 
+DISTINCT (
+    UNION(
+        SELECTCOLUMNS(BASE_RECEBIMENTOS, "EMPRESA", BASE_RECEBIMENTOS[EMPRESA]),
+        SELECTCOLUMNS(BASE_PAGAMENTOS, "EMPRESA", BASE_PAGAMENTOS[EMPRESA])
+    )
+)
+
+
+Lucro = 
+VAR TotalRecebimentos =
+    CALCULATE( SUM ( BASE_RECEBIMENTOS[VALOR] ) )
+VAR TotalPagamentos =
+    CALCULATE( SUM ( BASE_PAGAMENTOS[VALOR] ) )
+RETURN
+    TotalRecebimentos - TotalPagamentos
+
+
 ------------------------------------------------------------------------
+
 Dim_ClassificaçãoGerencial = 
 VAR ClassificacoesValidas =
     FILTER(
@@ -49,45 +58,59 @@ VAR ClassificacoesValidas =
 RETURN
 ADDCOLUMNS(
     ClassificacoesValidas,
-    "ID_Categoria",
-        RANKX(
-            ClassificacoesValidas,
-            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL],
-            ,
-            ASC
+    
+    "GRUPO_CLASSIFICACAO",
+        SWITCH(
+            TRUE(),
+            
+            // --- RECEBIMENTO POR OPERADORA DE VIAGEM ---
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] IN {
+                "AZUL VIAGENS", "CVC BRASIL", "FRT OPERADORA", "DECOLAR.COM",
+                "TREND OPERADORA", "COOBASTUR", "ORIENTER", "VIAGENS PROMO",
+                "E-HTL", "BWT Operadora", "Hotelbeds", "Cativa", "Clube Bancorbrás",
+                "Keytel", "RDC Viagens", "CLIENTES DIVERSOS - AGENCIAS/OPERADORAS"
+            }, "RECEBIMENTO POR OPERADORA DE VIAGEM",
+
+            // --- RECEBIMENTO COM CARTÃO DE CRÉDITO ---
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] IN {
+                "CARTÃO REDE - DEBITO", "CARTÃO REDE - CREDITO",
+                "CARTÃO REDE - CREDITO PARCELADO", "CARTÃO REDE - CREDITO ANTECIPADO"
+            }, "RECEBIMENTO COM CARTÃO DE CREDITO",
+
+            // --- RECEBIMENTO VIA PIX E ESPÉCIE ---
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] IN {
+                "DINHEIRO EM DEPÓSITO", "TRANSFERENCIA PIX/TED"
+            }, "RECEBIMENTO VIA PIX E ESPECIE",
+
+            // --- RECEBIMENTO HOTELBEDS/ADVANTOS ---
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] = "ADIANTAMENTO HOTELBEDS/ADVANTOS",
+                "RECEBIMENTO HOTELBEDS/ADVANTOS",
+
+            // --- CASO NÃO ENCONTRE ---
+            "OUTROS"
+        ),
+
+    "OrdemGrupo",
+        SWITCH(
+            TRUE(),
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] IN {
+                "AZUL VIAGENS", "CVC BRASIL", "FRT OPERADORA", "DECOLAR.COM",
+                "TREND OPERADORA", "COOBASTUR", "ORIENTER", "VIAGENS PROMO",
+                "E-HTL", "BWT Operadora", "Hotelbeds", "Cativa", "Clube Bancorbrás",
+                "Keytel", "RDC Viagens", "CLIENTES DIVERSOS - AGENCIAS/OPERADORAS"
+            }, 1,
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] IN {
+                "CARTÃO REDE - DEBITO", "CARTÃO REDE - CREDITO",
+                "CARTÃO REDE - CREDITO PARCELADO", "CARTÃO REDE - CREDITO ANTECIPADO"
+            }, 2,
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] IN {
+                "DINHEIRO EM DEPÓSITO", "TRANSFERENCIA PIX/TED"
+            }, 3,
+            BASE_RECEBIMENTOS[CLASSIFICAÇÃO GERENCIAL] = "ADIANTAMENTO HOTELBEDS/ADVANTOS", 4,
+            5
         )
 )
+
 -----------------------------------------------------------------------
-Dim_ContaDeposito =
-ADDCOLUMNS(
-    FILTER(
-        DISTINCT( BASE_RECEBIMENTO[Contas/C x Forma Rec.] ),
-        NOT( ISBLANK( BASE_RECEBIMENTO[Contas/C x Forma Rec.] ) )
-    ),
-    "ID_Conta",
-        RANKX(
-            FILTER(
-                DISTINCT( BASE_RECEBIMENTO[Contas/C x Forma Rec.] ),
-                NOT( ISBLANK( BASE_RECEBIMENTO[Contas/C x Forma Rec.] ) )
-            ),
-            BASE_RECEBIMENTO[Contas/C x Forma Rec.],
-            ,
-            ASC
-        )
-)
+
 ------------------------------------------------------------------------
-Dim_FormaRecebimento = 
-DATATABLE (
-    "ID_Forma", INTEGER,
-    "Forma_Recebimento", STRING,
-    "Tipo_Pagamento", STRING,
-    {
-        {1, "PIX", "Transferência"},
-        {2, "TED", "Transferência"},
-        {3, "Depósito", "Espécie"},
-        {4, "Cartão Crédito", "Cartão"},
-        {5, "Cartão Débito", "Cartão"},
-        {6, "Cartão Parcelado", "Cartão"},
-        {7, "Cartão Antecipado", "Cartão"}
-    }
-)
