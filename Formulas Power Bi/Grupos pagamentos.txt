@@ -1,0 +1,156 @@
+1. Devoluções:
+Reembolso de Reservas
+Reembolso Magna
+
+2. Impostos Incidentes Sobre Vendas:
+ISS Próprio
+Simples Nacional
+ICMS
+PIS
+COFINS
+
+3. Custo com Alimentos – Café da Manhã:
+
+Alimentos Cozinha
+Alimentos - Presunto e Queijo
+Alimentos - Hortifruti
+Alimentos - Pães
+Alimentos - Laticínios
+Alimentos - Ovos
+Alimentos - Carnes
+Alimentos - Polpas, Sucos e Chá
+Alimentos - Café
+Alimentos - Pão de Queijo
+Alimentos - Bacon
+Alimentos - Peixe
+
+
+4. Custo com Bebidas:
+Frigobar
+Snack Bar
+
+5. Custo com Restaurante:
+Insumos - Restaurante
+Frutos do Mar - Restaurante
+Carnes - Restaurante
+Insumos Cozinha - Restaurante
+Vinhos - Restaurante
+Destilados - Restaurante
+
+6. Custos da Hospedagem:
+Lavanderia
+Material de Limpeza
+Enxoval
+Gás de Cozinha
+Amenities (Shampoo/Creme/Sabonete)
+
+7. Custos de Eventos:
+Buffet - Evento
+Buffet - Eventos Banda
+
+8. Despesas com Vendas:
+Comissões de Agentes
+Marketing
+Serviços de Consultoria/Assessoria
+Serviço de Tráfego Pago
+Comissões do Comercial
+
+9. Despesas com Pessoal:
+Salários
+13º Salário
+Bonificação
+INSS
+FGTS
+Férias
+Vale Transporte / Combustível
+Alimentação Funcionários
+Assistência Médica
+Rescisões
+Cesta Básica
+Prêmio Assiduidade
+IRRF s/ Folha (0561)
+Kit Felicidade
+Diárias Avulsos
+Fardamentos e Uniformes
+Cesta Natalina
+Segurança do Trabalho
+Água para Consumo
+Treinamentos e Cursos
+
+9. Pro Labore:
+Gerente
+
+9.Viagem e Representação:
+Viagens e Representações
+
+10. Utilidades e Serviços:
+Energia Elétrica
+Água e Esgoto
+Internet / TV a cabo
+Telefone Fixo
+
+11.Despesas com Manutenções:
+Manutenção Predial
+Manutenção Máquinas e Equipamentos
+Manutenção Ar Condicionado
+Manutenção Piscina
+Manutenção Elevador
+
+12. Despesas Gerais:
+Contabilidade
+Sistema e CRM
+Informática
+Sindicatos e Associações
+Som Ambiente (ECAD)
+Utensílios de Cozinha
+Serviços Gráficos
+Coleta de Lixo
+Projeto Bombeiros
+Segurança e Vigilância
+Locação de Equipamentos
+Material de Informática
+Dedetização
+Decoração
+Material de Escritório
+Serviços de Paisagismo
+Aluguel do Estacionamento
+Custas Processuais
+Cartório
+Material Descartável
+Fretes/Correios/Entregas
+Marcas e Patentes
+Seguros
+Despesa com Hospedagem
+
+13.Impostos e Taxas Diversas:
+IPTU
+Foro SPU
+Impostos e Taxas Diversos
+ISS Retido
+IOF s/ Rendimentos Financeiros
+IR s/ Rendimentos Financeiros
+IRRF 8045
+IRRF 1708
+CSRF 5952
+
+14. OUTRAS RECEITAS OPERACIONAIS:
+Rendimentos de Aplicações
+Recuperação de Despesas
+
+15. DESPESAS BANCÁRIAS DIVERSAS:
+Taxa Administrativa dos Cartões - Rede
+Tarifa Bancária
+Juros Pagos
+
+16.OUTROS RESULTADOS OPERACIONAIS:
+
+Venda de Ativos
+Reembolso de Despesas
+Reembolso de Despesas (duplicado, manter caso necessário)
+Devolução de Pix
+Desconto Concedido
+Perdas Diversas
+Energia Elétrica-
+Devolução de Empréstimo de Sócio - Carlos Vanley-
+Empréstimo - Carneiro de Melo
+Empréstimo - Carneiro de Melo (repetido)
